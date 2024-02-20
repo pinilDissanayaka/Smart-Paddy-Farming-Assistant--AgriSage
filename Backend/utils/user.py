@@ -12,7 +12,7 @@ class User(object):
         
         
     @classmethod
-    def connectDB(cls, databaseName = 'Glova', collectionName='Users'):
+    def connectDB(cls, databaseName = 'AgriSage', collectionName='Users'):
         try:
             client=MongoClient(os.getenv('MONGO_CLIENT'))
             db=client[databaseName]
@@ -90,7 +90,7 @@ class User(object):
             
         return status, user
     
-    def updateUser(self, emailAddress, username=None, emailAddressEdited=None, phoneNumber=None, gender=None, address=None, password=None, skinType=None, skinTone=None, skinConcernList=None):
+    def updateUser(self, emailAddress, username=None, emailAddressEdited=None, phoneNumber=None, address=None, password=None):
         try:
             client, collection, connectionStatus=User.connectDB()
             
@@ -106,10 +106,6 @@ class User(object):
                 if not phoneNumber is None:
                     collection.update_one({'emailAddress' : emailAddress}, {'$set' : {'phoneNumber' : phoneNumber}})
                     status=True
-            
-                if not gender is None:
-                    collection.update_one({'emailAddress' : emailAddress}, {'$set' : {'gender' : gender}})
-                    status=True
         
                 if not address is None:
                     collection.update_one({'emailAddress' : emailAddress}, {'$set' : {'address' : address}})   
@@ -118,18 +114,6 @@ class User(object):
                 if not password is None:
                     password=password=self._bycrypt.generate_password_hash(password).decode('utf-8')
                     collection.update_one({'emailAddress' : emailAddress}, {'$set' : {'password' : password}})
-                    status=True
-                    
-                if not skinType is None:
-                    collection.update_one({'emailAddress' : emailAddress}, {'$set' : {'skinType' : skinType}})
-                    status=True
-                
-                if not skinTone is None:
-                    collection.update_one({'emailAddress' : emailAddress}, {'$set' : {'skinTone' : skinTone}})
-                    status=True
-                
-                if not skinConcernList is None:
-                    collection.update_one({'emailAddress' : emailAddress}, {'$set' : {'skinConcernList' : skinConcernList}})
                     status=True
                              
             else:
