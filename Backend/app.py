@@ -25,6 +25,41 @@ def signIn():
     return jsonify({"responce": responce})
 
 
+@app.route("/validate-password", methods=['GET', 'POST'])
+def validatePassword():
+    password = str(request.args['password'])
+    
+    status=user.validatePassword(password=password)
+    
+    responce={"status": status}
+    
+    return jsonify({"responce" : responce})
+
+
+
+@app.route("/sign-up", methods=['GET', 'POST'])
+def signUp():
+    username = str(request.args['username'])
+    emailAddress = str(request.args['emailAddress'])
+    phoneNumber = str(request.args['phoneNumber'])
+    password = str(request.args['password'])
+        
+    status=user.addUser(username=username, emailAddress=emailAddress, phoneNumber=phoneNumber, password=password)
+    
+    if status:
+        session['loggedIn'] = True
+        session['emailAddress'] = emailAddress
+        session['username']=username
+        
+        responce={"status": "success", 'username': username}
+        
+    else:
+        responce={"status": "unsuccess", 'username': None}
+
+    return jsonify({"responce" : responce})
+
+
+
 
 
 
